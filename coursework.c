@@ -265,7 +265,7 @@ int main(void) {
                 
                 for (int walk = 0; walk < NUMWALKS; walk++)
                 {
-                    if (path_inf[walk].success = true)
+                    if (path_inf[walk].success == true)
                     {
                         sq_diff_sum += pow((double)path_inf[walk].path_length - mean_path, 2);
                     }
