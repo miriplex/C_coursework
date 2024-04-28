@@ -201,8 +201,6 @@ int main(void) {
     FILE *fptr;
     struct cell map[NUMROWS][NUMCOLS];
 
-    struct path_info all_paths[NUMROWS][NUMCOLS][NUMWALKS];
-
     char single_space;
 
     fptr = fopen("island_map.txt", "r");
@@ -231,24 +229,23 @@ int main(void) {
             double std;
             int successful_walks = 0;
             int total_path_length = 0;
-            struct path_info path_inf;
+            struct path_info path_inf[NUMWALKS];
             for (int walk = 0; walk < NUMWALKS; walk++)
             {
-                path_inf = generate_a_random_path(map, x, y);
-                all_paths[y][x][walk] = path_inf;
-                if (path_inf.path_length == 0)
+                path_inf[walk] = generate_a_random_path(map, x, y);
+                if (path_inf[walk].path_length == 0)
                 {
                     break;
                 }
-                else if (path_inf.success == true)
+                else if (path_inf[walk].success == true)
                 {
                     successful_walks++;
-                    total_path_length += path_inf.path_length;
+                    total_path_length += path_inf[walk].path_length;
                 }
             }
-            if (all_paths[y][x][0].path_length == 0)
+            if (path_inf[0].path_length == 0)
             {
-                if (all_paths[y][x][0].success == true) {
+                if (path_inf[0].success == true) {
                     map[y][x].probability = 100.00;
                     map[y][x].mean_path_length = 0.00;
                     map[y][x].std_deviation = 0.00;
@@ -268,13 +265,13 @@ int main(void) {
                 
                 for (int walk = 0; walk < NUMWALKS; walk++)
                 {
-                    if (all_paths[y][x][walk].success = true)
+                    if (path_inf[walk].success = true)
                     {
-                        sq_diff_sum += pow(all_paths[y][x][walk].path_length - mean_path, 2);
+                        sq_diff_sum += pow((double)path_inf[walk].path_length - mean_path, 2);
                     }
                 }
 
-                std = sqrt(sq_diff_sum / successful_walks);
+                std = sqrt(sq_diff_sum / (double)successful_walks);
 
                 map[y][x].probability = success_rate;
                 map[y][x].mean_path_length = mean_path;
