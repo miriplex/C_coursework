@@ -174,22 +174,22 @@ struct path_info generate_a_random_path(struct cell map[][NUMCOLS], int starting
                 break;
         }
     
-        x = (x < NUMCOLS) ? x : NUMCOLS;
+        x = (x < NUMCOLS) ? x : (NUMCOLS - 1);
         x = (x > 0) ? x : 0;
-        y = (y < NUMROWS) ? y : NUMROWS;
+        y = (y < NUMROWS) ? y : (NUMROWS - 1);
         y = (y > 0) ? y : 0;
 
     }
 
+    path.path_length = NUMSTEP;
+
     status = calculate_status(map, x, y);
     if (status == 1){
         path.success = true;
-        path.path_length = 10;
-        return path;
     }
-    
-    path.success = false;
-    path.path_length = 10;
+    else {
+        path.success = false;
+    }
     return path;
 }
 
@@ -261,7 +261,7 @@ int main(void) {
             }
             else 
             {
-                success_rate = successful_walks / 10.0;
+                success_rate = successful_walks * 100.0 / (double)NUMWALKS;
                 mean_path = total_path_length / (double)successful_walks;
 
                 double sq_diff_sum = 0;
