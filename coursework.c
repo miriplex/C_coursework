@@ -135,11 +135,11 @@ struct path_info generate_a_random_path(struct cell map[][NUMCOLS], int starting
         switch (movement_direction_index)
         {
             case 0:
-                y++;
+                y--;
                 break;
 
             case 1:
-                y++;
+                y--;
                 x++;
                 break;
             
@@ -149,16 +149,16 @@ struct path_info generate_a_random_path(struct cell map[][NUMCOLS], int starting
             
             case 3:
                 x++;
-                y--;
+                y++;
                 break;
             
             case 4:
-                y--;
+                y++;
                 break;
             
             case 5:
                 x--;
-                y--;
+                y++;
                 break;
             
             case 6:
@@ -167,7 +167,7 @@ struct path_info generate_a_random_path(struct cell map[][NUMCOLS], int starting
             
             case 7:
                 x--;
-                y++;
+                y--;
                 break;
     
             default:
