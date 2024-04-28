@@ -125,7 +125,7 @@ struct path_info generate_a_random_path(struct cell map[][NUMCOLS], int starting
             return path;
         }
         else if (status == 1){
-            path.success = 1;
+            path.success = true;
             path.path_length = step;
             return path;
         }
@@ -180,6 +180,11 @@ struct path_info generate_a_random_path(struct cell map[][NUMCOLS], int starting
         y = (y > 0) ? y : 0;
 
     }
+        if (status == 1){
+            path.success = true;
+            path.path_length = 10;
+            return path;
+        }
     path.success = false;
     path.path_length = 10;
     return path;
