@@ -75,6 +75,38 @@ void show_probability_of_escape(struct cell map[][NUMCOLS])
     }
 }
 
+void show_mean_path_length(struct cell map[][NUMCOLS])
+{
+    printf("Mean path length:\n");
+    for (int y = 0; y < NUMROWS; y++)
+    {
+        for (int x = 0; x < NUMCOLS; x++)
+        {
+            if (x != 0){
+                printf(" ");
+            }
+            printf("%.2f", map[y][x].mean_path_length);
+        }
+        printf("\n");
+    }
+}
+
+void show_std_of_path_length(struct cell map[][NUMCOLS])
+{
+    printf("Standard deviation of path length:\n");
+    for (int y = 0; y < NUMROWS; y++)
+    {
+        for (int x = 0; x < NUMCOLS; x++)
+        {
+            if (x != 0){
+                printf(" ");
+            }
+            printf("%.2f", map[y][x].std_deviation);
+        }
+        printf("\n");
+    }
+}
+
 struct path_info generate_a_random_path(struct cell map[][NUMCOLS], int starting_x, int starting_y){
     struct path_info path;
     int x = starting_x;
@@ -82,7 +114,6 @@ struct path_info generate_a_random_path(struct cell map[][NUMCOLS], int starting
     int rand_num;
     int movement_direction_index;
     int status;
-    srand(123456);
 
     for (int step = 0; step < NUMSTEP; step++)
     {
@@ -134,7 +165,7 @@ struct path_info generate_a_random_path(struct cell map[][NUMCOLS], int starting
                 x--;
                 break;
             
-            case 7:    
+            case 7:
                 x--;
                 y++;
                 break;
@@ -156,6 +187,8 @@ struct path_info generate_a_random_path(struct cell map[][NUMCOLS], int starting
 
 
 int main(void) {
+
+    srand(123456);
 
     FILE *fptr;
     struct cell map[NUMROWS][NUMCOLS];
@@ -215,13 +248,13 @@ int main(void) {
                 else {
                     map[y][x].probability = 0.00;
                     map[y][x].mean_path_length = 0.00;
-                    map[y][x].std_deviation = 0.00;
+                    map[y][x].std_deviation = 0.00; 
                 }
             }
             else 
             {
-                success_rate = successful_walks / 1000;
-                mean_path = total_path_length / 1000;
+                success_rate = successful_walks / 10.0;
+                mean_path = total_path_length / (double)successful_walks;
 
                 double sq_diff_sum = 0;
                 
@@ -245,6 +278,10 @@ int main(void) {
     show_map(map);
     printf("\n");
     show_probability_of_escape(map);
+    printf("\n");
+    show_mean_path_length(map);
+    printf("\n");
+    show_std_of_path_length(map);
 
     return 0;
 }
