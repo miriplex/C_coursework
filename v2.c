@@ -50,8 +50,8 @@ int CurrentState(struct coordinate island[][NUMCOLS], int x, int y) {  //functio
 // Function that takes a random walk and returns the information of the path
 struct InformationOfPath CreateRandomPath(struct coordinate island[][NUMCOLS], int starting_x, int starting_y){
     struct InformationOfPath path = {0}; // Initialize path data
-    int x = starting_x;                  // Current x coordinate
-    int y = starting_y;                  // Current y coordinate
+    int x = starting_x;                  // Starting x
+    int y = starting_y;                  // Starting Y
     int rand_num;                        // Variable to store a random number
     int randomDirection;                 // Index for random direction
     int status = CurrentState(island, x, y); // Check the initial cell
@@ -168,7 +168,7 @@ int main(void) {
                 walksPerformed++;
             }
 
-            // Calculate probabilities and statistics only if any walks were performed
+            // Calculate probabilities and statistics only if any walks were performed (meaning that the player didnt die or win instantly)
             if (walksPerformed > 0) {
                 double successRate = (double)wins / walksPerformed * 100.0;
                 double meanPathLength = (wins > 0) ? ((double)totalPathLength / wins) : 0.0;
