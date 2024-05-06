@@ -52,11 +52,11 @@ struct InformationOfPath CreateRandomPath(struct coordinate island[][NUMCOLS], i
     struct InformationOfPath path = {0}; // Initialize path data
     int x = starting_x;                  // Current x coordinate
     int y = starting_y;                  // Current y coordinate
-    int rand_num;                        // Variable to store random number
+    int rand_num;                        // Variable to store a random number
     int randomDirection;                 // Index for random direction
-    int status = CurrentState(island, x, y); // Initial status from the starting cell
+    int status = CurrentState(island, x, y); // Check the initial cell
 
-    // Iterate through a maximum of NUMSTEP steps
+    // Iterate through all walks
     for (int step = 0; step < NUMSTEP; step++) {
         if (status != 2) { // Walk needs to terminate
             path.success = (status == 1);
@@ -65,31 +65,51 @@ struct InformationOfPath CreateRandomPath(struct coordinate island[][NUMCOLS], i
             return path;
         }
 
-        // Generate a random direction (0 to 7 representing N, NE, E, SE, S, SW, W, NW)
+        // Generate a random direction
         rand_num = rand();
         randomDirection = rand_num % 8;
 
-        // Update coordinates based on the direction
+        // Perform a movement
         switch (randomDirection) {
-            case 0: y--; break;           // N
-            case 1: y--; x++; break;      // NE
-            case 2: x++; break;           // E
-            case 3: x++; y++; break;      // SE
-            case 4: y++; break;           // S
-            case 5: x--; y++; break;      // SW
-            case 6: x--; break;           // W
-            case 7: x--; y--; break;      // NW
+            case 0: 
+            y--; 
+            break;           // N
+            case 1: 
+            y--; 
+            x++; 
+            break;      // NE
+            case 2: 
+            x++; 
+            break;           // E
+            case 3: 
+            x++; 
+            y++; 
+            break;      // SE
+            case 4: 
+            y++; 
+            break;           // S
+            case 5: 
+            x--; 
+            y++; 
+            break;      // SW
+            case 6: 
+            x--; 
+            break;           // W
+            case 7: 
+            x--; 
+            y--; 
+            break;      // NW
         }
 
-        // Constrain the position within the island's boundaries
+        // keep x and y within map's boundaries
         x = (x < 0) ? 0 : (x >= NUMCOLS) ? NUMCOLS - 1 : x;
         y = (y < 0) ? 0 : (y >= NUMROWS) ? NUMROWS - 1 : y;
 
-        // Update the status after the move
+        // Update the status
         status = CurrentState(island, x, y);
     }
 
-    // Handle the final position after all steps
+    // Get final position values
     path.PathLength = NUMSTEP;
     path.success = (status == 1);
     path.error = (status == 3);
@@ -119,7 +139,6 @@ int main(void) {
     }
     fclose(fp);  //closes the file
 
-        }
 
      // Perform random walks on each cell
     for (int y = 0; y < NUMROWS; y++) {
@@ -127,6 +146,8 @@ int main(void) {
             int wins = 0;
             int totalPathLength = 0;
             int walksPerformed = 0;
+            struct InformationOfPath InfoPath[NUMWALKS];    // An Array to store path information for every walk for a selected cell
+
 
             for (int walk = 0; walk < NUMWALKS; walk++) {
                 struct InformationOfPath path = CreateRandomPath(island, x, y);
@@ -142,22 +163,22 @@ int main(void) {
 
                 if (path.PathLength == 0) // Path ended instantly
                     break;
-
+                
+                InfoPath[walk] = path;
                 walksPerformed++;
             }
 
             // Calculate probabilities and statistics only if any walks were performed
             if (walksPerformed > 0) {
                 double successRate = (double)wins / walksPerformed * 100.0;
-                double meanPathLength = (wins > 0) ? (double)totalPathLength / wins : 0.0;
+                double meanPathLength = (wins > 0) ? ((double)totalPathLength / wins) : 0.0;
                 double stdDeviation = 0.0;
 
                 if (wins > 0) {
                     double sumOfSquares = 0.0;
                     for (int walk = 0; walk < NUMWALKS; walk++) {
-                        if (InfoPath[walk].success) {
+                        if (InfoPath[walk].success)
                             sumOfSquares += pow((double)InfoPath[walk].PathLength - meanPathLength, 2);
-                        }
                     }
                     stdDeviation = sqrt(sumOfSquares / wins);
                 }
